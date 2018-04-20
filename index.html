@@ -106,14 +106,14 @@
                                 <li>Adapt.
                                     <ul style="font-size: 0.65em;">
                                     <li>Real-Time Demands</li>
-                                    <li>Unknown Environments</li>
-                                    <li>Dynamic Environments</li>
+                                    <li>Unknown/Dynamic Environments</li>
+                                    <li>Sensor Noise/Failure/Uncertainty</li>
                                     </ul>
                                 </li>
                                 <li>Respect physical constraints.
                                     <ul style="font-size: 0.65em;">
                                     <li>Joint/Torque Limits</li>
-                                    <li>Avoid Obstacles</li>
+                                    <li>Obstacle Avoidance</li>
                                     </ul>
                                 </li>
                                 <li>Optimize.
@@ -259,7 +259,7 @@
                     <section>
                         <h2><span style="color: #92A0A0">Prior Art</span> Conformal<br>Graph Planning</h2>
                         <div style="float: left; width: 50%">
-                            <ol style="font-size: 0.5em;">
+                            <ol style="font-size: 0.45em;">
                                 <li>Sample points in $(s, l)$ road coordinates.</li>
                                 <li>Generate kinematically feasible paths connecting sampled coordinates.</li>
                                 <li>For each path, generate a set of trajectories - each with a constant acceleration profile.</li>
@@ -281,7 +281,7 @@
                     <section>
                         <h2><span style="color: #92A0A0">Prior Art</span> Augmented<br>Graph Planning</h2>
                         <div style="float: left; width: 50%;">
-                            <ol style="font-size: 0.5em;">
+                            <ol style="font-size: 0.45em;">
                                 <li>Construct a graph by sampling points (spatial nodes) at regular intervals along the road.</li>
                                 <li>Assign obstacle and lane-centering costs to each spatial node in the graph.</li>
                                 <li>Use the Bellman-Ford algorithm to construct a min. cost path through the graph.</li>
@@ -612,7 +612,7 @@
                                 <br>
                                 <li>SwerveSim places two or more vehicles with different planning algorithms in otherwise identical vehicles in an identical traffic-filled world.</li>
                                 <br>
-                                <li>Vehicles under test are not aware of each other. They are competing to incur the lowest cost as the traverse the SwerveSim track.</li>
+                                <li>Vehicles under test are not aware of each other. They are competing to incur the lowest cost as they traverse the SwerveSim track.</li>
                                 <br>
                                 <li>SwerveSim gives the user control of the cost function used to score the planners.
                                     <ul>
