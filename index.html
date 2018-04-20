@@ -44,7 +44,7 @@
                                 <ol style="font-size: 0.6em; list-style-type: circle;">
                                     <li>Planning Stack</li> 
                                     <li>Motion Planning</li> 
-                                    <li>Speed, Cost, Quality</li> 
+                                    <li>Speed, Quality, Cost</li> 
                                     <li>Problem Statement</li> 
                                 </ol>
                             </li>
@@ -107,7 +107,7 @@
                                     <ul style="font-size: 0.65em;">
                                     <li>Real-Time Demands</li>
                                     <li>Unknown/Dynamic Environments</li>
-                                    <li>Sensor Noise/Failure/Uncertainty</li>
+                                    <li>Sensor Anomalies (Noise/Occlusion/Failure)</li>
                                     </ul>
                                 </li>
                                 <li>Respect physical constraints.
@@ -120,6 +120,36 @@
                                     <ul style="font-size: 0.65em;">
                                     <li>Energy, Time</li>
                                     <li>Safety, Comfort</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <div>
+                            <h2><span style="color: #92A0A0">Background</span> Motion Planning</h2>
+                            <object data="figures/example.png" style="float: right; width: 10%;"></object>
+                            <div style="width: 70%; float: left;">
+                            <ul>
+                                <li>Inputs
+                                    <ul style="font-size: 0.6em;">
+                                        <li>Vehicle State</li>
+                                        <li>Local Road Geometry</li>
+                                        <li>Obstacle Predictions</li>
+                                        <li>Behavioral Commands</li>
+                                    </ul>
+                                </li>
+                                <li>Outputs
+                                    <ul style="font-size: 0.6em;">
+                                        <li>A trajectory valid for a short time into the future (~10sec).</li>
+                                    </ul>
+                                </li>
+                                <li>Plan vs. Trajectory
+                                    <ul style="font-size: 0.6em;">
+                                        <li>By convention, a path contains spatial waypoints e.g. $[x, y, \theta, \kappa]^\intercal$,
+                                            and a trajectory includes both spatial and velocity waypoints e.g. $[x, y, \theta, \kappa, v, a]^\intercal$.</li>
                                     </ul>
                                 </li>
                             </ul>
@@ -149,15 +179,6 @@
                     </section>
 
                     <section>
-                        <h2><span style="color: #92A0A0">Background</span> Planning Cost</h2>
-                        <ul>
-                            <li>Computing power currently halves the range of GM's autonomous fleet.</li>
-                            <li>Many existing motion planners rely on high-end CPUs and GPUs to perform dense sampling of the trajectory state space in real time.</li>
-                            <li>Ideally, the motion planner would consume one thread on a commodity CPU.</li>
-                        </ul>
-                    </section>
-
-                    <section>
                         <h2><span style="color: #92A0A0">Background</span> Trajectory Quality</h2>
                         <ul>
                             <li>Quantifying trajectory quality is a large component of the difficulty in planning.</li>
@@ -174,10 +195,20 @@
                     </section>
 
                     <section>
+                        <h2><span style="color: #92A0A0;">Background</span> Planning Cost</h2>
+                        <ul style="width: 100%;">
+                            <li>For the GM fleet, <b>computing $\approx \frac{1}{2}$ of total power!</b></li>
+                            <li>Many existing motion planners use high-end CPUs and GPUs to achieve dense state space sampling.</li>
+                            <li>Ideally, the motion planner would consume <b>one thread on a commodity CPU.</b></li>
+                        </ul>
+                    </section>
+
+                    <section>
                         <h2><span style="color: #92A0A0">Background</span> Problem Statement</h2>
-                        <ol>
-                            <li>Existing motion planning algorithms balance planning speed and trajectory quality while disregarding planning costs.</li>
-                            <li>No standard methods exist for quantifiably comparing the performance of motion planning algorithms.</li>
+                        <ol style="font-size: 0.8em;">
+                            <li><b>Quantitative comparison of planner performance is difficult.</b> There are desirable and undesirable features, but no universal agreement on how to fuse them into a single scalar cost.</li>
+                            <br>
+                            <li>Until recently, the hardware and power costs of planning have not played a major part in planning algorithm design. <b>Researchers can afford expensive hardware and high power consumption, but consumers cannot.</b></li>
                         </ol>
                     </section>
                 </section>
@@ -321,14 +352,14 @@
                         <h2><span style="color: #92A0A0">Prior Art</span><br>Computational Complexity</h2>
                         <div style="float: left; width: 45%">
                             <h3>Graph-Search Based</h3>
-                            <ul style="font-size: 0.5em;">
+                            <ul style="font-size: 0.6em;">
                                 <li>The Conformal Lattice runs at 10Hz, using a GTX 260 to reoptimize and evaluate ~400,000 trajectories per cycle.</li>
                                 <li>The Augmented Graph Planner runs at 15-20Hz and evaluates ~4,000 spatial nodes and ~20,000 augmented nodes per cycle.</li>
                             </ul>
                         </div>
                         <div style="float: right; width: 45%">
                             <h3>Optimization-Based</h3>
-                            <ul style="font-size: 0.5em;">
+                            <ul style="font-size: 0.6em;">
                                 <li>While these methods can be made arbitrarily complex, the trajectory generator is extremely lightweight. Expect at least $650,000\frac{\text{paths}}{\text{sec}}$ per CPU thread.</li>
                             </ul>
                         </div>
@@ -342,28 +373,26 @@
 
                     <section>
                         <h2><span style="color: #92A0A0">Prior Art</span> Global vs.<br>Local Optimization</h2>
-                        <div style="float: center; width: 100%">
-                            <div style="float: left; width: 50%">
+                        <div style="float: center; width: 100%;">
+                            <div style="float: left; width: 45%; padding-right: 5%;">
                                 <h3>Global Optimization</h3>
-                                <ul style="font-size: 0.5em;">
+                                <ul style="font-size: 0.6em;">
                                     <li>Graph-Search planners attempt to search the full space of trajectories for the global optimum.</li>
                                     <li>Graph-Search planners are <i>resolution-complete</i>. If a feasible plan exists and the graph resolution is fine enough, they are guaranteed to find it (eventually).</li>
                                 </ul>
                             </div>
-                            <div style="float: left; width: 50%">
+                            <div style="float: right; width: 45%; padding-left: 5%;">
                                 <h3>Local Optimization</h3>
-                                <ul style="font-size: 0.5em;">
+                                <ul style="font-size: 0.6em;">
                                     <li>Optimization-Based planners make no global guarantees. Given an initial plan, they will refine it to a local optimum.</li>
                                     <li>If the initial plan is poor, the optimization will likely converge to a poor result.</li>
                                 </ul>
                             </div>
                         </div>
 
-                        <div class="fragment" style="float: center; width: 100%; color: #db3631;">
-                            Can we combine the global search of the graph-based algorithms with the speed of the optimization-based algorithms?
-                        </div>
                         <aside class="notes">
                             <ul>
+                            <li>Can we combine the global search of the graph-based algorithms with the speed of the optimization-based algorithms?</li>
                             <li>The GTX 260 (circa 2008) consumes about 160 Watts and costs $30 today.</li>
                             <li>On CPU alone (2008), it takes 0.6 seconds to run.</li>
                             </ul>
@@ -662,6 +691,7 @@
                         <h2>Citations</h2>
                         <ul>
                             <li>A. Kelly, <i>Mobile robotics: mathematics, models, and methods.</i> New York, NY: Cambrige Univ. Press, 2013.</li>
+                            <li>TODO: I will fix this. I am waiting to cite everything.</li>
                         </ul>
                     </section>
                     <section>
@@ -669,6 +699,7 @@
                         <ul>
                             <li>A. Kelly, <i>Mobile robotics: mathematics, models, and methods.</i> New York, NY: Cambrige Univ. Press, 2013.</li>
                             <li><i>IKV High Efficiency 6-axis Robot Arm. IKV Robotics.</i></li>
+                            <li>TODO: I will fix this. I am waiting to cite everything.</li>
                         </ul>
                     </section>
                 </section>
