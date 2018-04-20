@@ -48,7 +48,7 @@
                                     <li>Problem Statement</li> 
                                 </ol>
                             </li>
-                            <li>Prior Work
+                            <li>Prior Art
                                 <ol style="font-size: 0.6em; list-style-type: circle;">
                                     <li>Survey</li> 
                                     <li>Graph Planning</li> 
@@ -83,13 +83,13 @@
 
                     <section data-transition="none-out">
                         <div>
-                            <h2>The Planning Stack</h2>
+                            <h2>Background | The Planning Stack</h2>
                             <object data="figures/Planning_Stack.png" style="float: center;"></object>
                         </div>
                     </section>
                     <section data-transition="none-in">
                         <div>
-                            <h2>The Planning Stack</h2>
+                            <h2>Background | The Planning Stack</h2>
                             <object data="figures/MP_Stack.png" style="float: center;"></object>
                         </div>
                     </section>
@@ -97,7 +97,7 @@
                     <!-- Slide 4: Motion Planning -->
                     <section>
                         <div>
-                            <h2>Motion Planning</h2>
+                            <h2>Background | Motion Planning</h2>
                             <object data="figures/examples.png" style="float: right; width: 30%;"></object>
                             <div style="width: 70%; float: right;">
                             <ul>
@@ -127,7 +127,7 @@
                     </section>
 
                     <section>
-                        <h2>Planning Speed</h2>
+                        <h2>Background | Planning Speed</h2>
                         <ul>
                             <li>Planners checkpoint the world state and solve the instantaneous planning problem.</li>
                                 <ul style="font-size: 0.65em;">
@@ -148,7 +148,7 @@
                     </section>
 
                     <section>
-                        <h2>Planning Cost</h2>
+                        <h2>Background | Planning Cost</h2>
                         <ul>
                             <li>Computing power currently halves the range of GM's autonomous fleet.</li>
                             <li>Many existing motion planners rely on high-end CPUs and GPUs to perform dense sampling of the trajectory state space in real time.</li>
@@ -157,7 +157,7 @@
                     </section>
 
                     <section>
-                        <h2>Trajectory Quality</h2>
+                        <h2>Background | Trajectory Quality</h2>
                         <ul>
                             <li>Quantifying trajectory quality is a large component of the difficulty in planning.</li>
                             <li>Many factors are obviously desirable.</li>
@@ -173,7 +173,7 @@
                     </section>
 
                     <section>
-                        <h2>Problem Statement</h2>
+                        <h2>Background | Problem Statement</h2>
                         <ol>
                             <li>Existing motion planning algorithms balance planning speed and trajectory quality while disregarding planning costs.</li>
                             <li>No standard methods exist for quantifiably comparing the performance of motion planning algorithms.</li>
@@ -182,14 +182,14 @@
                 </section>
 
 
-                <!-- Slide 5: Prior Work -->
+                <!-- Slide 5: Prior Art -->
                 <section>
                     <section>
-                        <h1>Prior Work</h1>
+                        <h1>Prior Art</h1>
                     </section>
 
                     <section data-transition="none-out">
-                        <h2>Prior Work</h2>
+                        <h2>Prior Art</h2>
                         <div style="display: grid; grid-template-columns: auto auto;">
                             <div style="text-align: center; padding: 0.5em;">
                                 <h4>Graph-Search Based Planners</h4>
@@ -222,7 +222,7 @@
                         </div>
                     </section>
                     <section data-transition="none-in">
-                        <h2>Prior Work</h2>
+                        <h2>Prior Art</h2>
                         <div style="display: grid; grid-template-columns: auto auto;">
                             <div style="text-align: center; padding: 0.5em;">
                                 <h4 style="color: #829817">Graph-Search Based Planners</h4>
@@ -256,7 +256,7 @@
                     </section>
 
                     <section>
-                        <h2>Conformal Graph Planning</h2>
+                        <h2>Prior Art | Conformal<br>Graph Planning</h2>
                         <div style="float: left; width: 50%">
                             <ol style="font-size: 0.5em;">
                                 <li>Sample points in $(s, l)$ road coordinates.</li>
@@ -278,7 +278,7 @@
                     </section>
 
                     <section>
-                        <h2>Augmented Graph Planning</h2>
+                        <h2>Prior Art | Augmented<br>Graph Planning</h2>
                         <div style="float: left; width: 50%;">
                             <ol style="font-size: 0.5em;">
                                 <li>Construct a graph by sampling points (spatial nodes) at regular intervals along the road.</li>
@@ -299,7 +299,7 @@
                     </section>
 
                     <section>
-                        <h2>Optimization-Based<br>Trajectory Generation</h2>
+                        <h2>Prior Art | Optimization-Based<br>Trajectory Generation</h2>
                         <div style="float: left; width: 50%; font-size: 0.5em;">
                             <p>Solve the Boundary Value Problem connecting $\mathbf{X_s} = [x_0, y_0, \theta_0, \kappa_0]^\intercal$ to $\mathbf{X_e} = [x_e, y_e, \theta_e, \kappa_e]^\intercal$ while respecting vehicle kinematics.</p>
                             <ol>
@@ -317,7 +317,7 @@
                     </section>
 
                     <section>
-                        <h2>Computational Complexity</h2>
+                        <h2>Prior Art | Computational Complexity</h2>
                         <div style="float: left; width: 45%">
                             <h3>Graph-Search Based</h3>
                             <ul style="font-size: 0.5em;">
@@ -340,7 +340,7 @@
                     </section>
 
                     <section>
-                        <h2>Global vs. Local Optimization</h2>
+                        <h2>Prior Art | Global<br>vs. Local Optimization</h2>
                         <div style="float: center; width: 100%">
                             <div style="float: left; width: 50%">
                                 <h3>Global Optimization</h3>
@@ -377,7 +377,7 @@
                     </section>
 
                     <section>
-                        <h2>Motivation</h2>
+                        <h2>Pattern Planning | Motivation</h2>
                         <ol style="width: 80%;">
                             <li>Reduce hardware requirements and planning power consumption.</li>
                             <li>Achieve global search with low computational cost.</li>
@@ -385,8 +385,8 @@
                         </ol>
                     </section>
                     <section>
-                        <h2>Guided Local Optimization</h2>
-                        <div style="float: left; width: 50%">
+                        <h2>Pattern Planning |<br>Guided Local Optimization</h2>
+                        <div style="float: left; width: 50%; font-size: 0.8em;">
                             <ul>
                                 <li>Probe the global search space with a series of local optimizations.</li>
                                 <br>
@@ -400,7 +400,7 @@
                         </div>
                     </section>
                     <section>
-                        <h2>Early Exit</h2>
+                        <h2>Pattern Planning | Early Exit</h2>
                         <div style="float: left; width: 50%">
                             <ul>
                                 <li>Execute the first trajectory that achieves the current goal and is found to be sufficiently safe and comfortable.</li>
@@ -414,17 +414,19 @@
                         </div>
                     </section>
                     <section>
-                        <h2>The Maneuver Pattern</h2>
-                        <object style="float: center; width: 70%;" data="figures/traffic_zones.png"></object>
-                        <ul style="font-size: 0.8em; padding-top: 2%;">
-                            <li>The highway driving environment is naturally divided into zones by local traffic.</li>
-                            <li>A maneuver pattern groups all trajectories that begin at the vehicle and terminate in the same zone.</li> 
-                            <li>The maneuver pattern is an abstraction representing a basin of attraction for the trajectory optimization routine.</li> 
-                        </ul>
+                        <h2 style="float: left; width: 50%;">Pattern Planning |<br>The Maneuver Pattern</h2>
+                        <div style="float: right; width: 50%;">
+                            <object style="float: center; width: 100%; padding-top: 10%;" data="figures/traffic_zones.png"></object>
+                            <ul style="float: center; width: 100%; font-size: 0.6em; padding-top: 2%;">
+                                <li>The highway driving environment is naturally divided into zones by local traffic.</li>
+                                <li>A maneuver pattern groups all trajectories that begin at the vehicle and terminate in the same zone.</li> 
+                                <li>The maneuver pattern is an abstraction representing a basin of attraction for the trajectory optimization routine.</li> 
+                            </ul>
+                        </div>
                     </section>
                     <section>
+                            <h2>Pattern Planning | Control Flow</h2>
                         <div style="float: left; width: 40%;">
-                            <h2>Control Flow</h2>
                             <ul style="font-size: 0.6em;">
                                 <li>Generate a ranked list of possible maneuver patterns.
                                     <ul style="font-size: 0.6em;">
@@ -439,26 +441,28 @@
                                 <li>If it is still not safe, return to the list of patterns and evaluate the next ranked pattern.</li>
                             </ul>
                         </div>
-                        <object style="float: right; width: 50%;" data="figures/pattern_planning.png"></object>
+                        <object style="float: right; width: 40%;" data="figures/pattern_planning.png"></object>
                     </section>
 
                     <section>
-                        <div style="float: left; width: 40%;">
-                            <h2>Emergency Response</h2>
+                        <div style="float: left; width: 60%;">
+                            <h2>Pattern Planning | Emergency Response</h2>
                             <ul style="font-size: 0.6em;">
                                 <li>If a safe, comfortable trajectory cannot be found, remove the comfort requirement.</li>
                                 <li>Prioritize emergency braking maneuvers.</li>
                                 <li>Re-evaluate the maneuver pattern list and immediately execute the first safe trajectory that is found.</li>
                             </ul>
                         </div>
-                        <object style="float: right; width: 50%;" data="figures/pattern_planning.png"></object>
+                        <object style="float: right; width: 40%; padding-top: 5%;" data="figures/pattern_planning.png"></object>
                     </section>
 
+                </section>
+                <section>
                     <section>
                         <h1>Trajectory Generation Details</h1>
                     </section>
                     <section>
-                        <h2>The Kinematic Bicycle Model</h2>
+                        <h2>Details | The Kinematic<br>Bicycle Model</h2>
                         <div style="float: right; width: 30%; font-size: 0.7em;" >
                             <object style="width: 100%;" data="figures/bicycle_model.png"></object>
                             $\kappa = \frac{tan(\delta)}{L}$
@@ -485,7 +489,7 @@
                     </section>
 
                     <section>
-                        <h2>Parametric Controls</h2>
+                        <h2>Details | Parametric Controls</h2>
                             Parameterize the controls
                             $
                             \boldsymbol{u}(t) =
@@ -503,7 +507,7 @@
                     </section>
 
                     <section>
-                        <h2>Forward Shooting</h2>
+                        <h2>Details | Forward Shooting</h2>
                         <div style="float: left; width: 50%; font-size: 0.7em;">
                             <p style="text-align: left;">
                             Given a control sequence parameterized by $\begin{bmatrix} c_0...c_{n-1} & d_0...d_{n-1} & T_f \end{bmatrix}^\intercal$
@@ -527,7 +531,7 @@
                     </section>
 
                     <section>
-                        <h2>Path Optimization</h2>
+                        <h2>Details | Path Optimization</h2>
                         <div style="float: left; width: 50%">
                             <ol style="font-size: 0.7em;">
                                 <li>Set $\mathbf{u}_{\dot{a}}(t) = 0$</li>
@@ -542,7 +546,7 @@
                         <object style="float: right; width: 45%;" data="figures/pathopt.gif"></object>
                     </section>
                     <section>
-                        <h2>Path Caching</h2>
+                        <h2>Details | Path Caching</h2>
                         <object style="float: right; width: 50%;" data="figures/path_cache.png"></object>
                         <div style="float: left; width: 45%; font-size: 0.7em;">
                         <ul>
@@ -557,7 +561,7 @@
 
                     <!-- Slide ?: Trajectory Optimization -->
                     <section>
-                        <h2>Trajectory Optimization</h2>
+                        <h2>Details | Trajectory Optimization</h2>
                         <div style="float: left; width: 40%; font-size: 0.6em;">
                             <ul>
                                 <li>Use the procedure from the previous slide to generate a path without regard for obstacles, velocities, or accelerations.</li>
@@ -577,7 +581,7 @@
                     </section>
 
                     <section>
-                        <h2>Trajectory Optimization Cont.</h2>
+                        <h2>Details | Trajectory Optimization Cont.</h2>
                         <div style="float: left; width: 40%; font-size: 0.6em;">
                             <p style="text-align: left;">
                             Modify the terminal cost components to accomplish the following goals:
@@ -594,7 +598,6 @@
                         </aside>
                     </section>
                 </section>
-
 
                 <section>
                     <section>
