@@ -1,0 +1,699 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>Reactive Motion Planning</title>
+
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/solarized.css">
+
+        <!-- Theme used for syntax highlighting of code -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <!-- Slide 1: Title -->
+                <section data-transition="slide-in none-out">
+                    <h1>Reactive Motion Planning</h1>
+                    <h3>Highway Driving with Local Optimization</h3>
+                    <p>
+                        <small><a href="http://jrdnfrd.com">Jordan Ford</a> / <a href="mailto:jsford@andrew.cmu.edu">@jsford</a></small>
+                    </p>
+                </section>
+
+                <!-- Slide 2: Outline -->
+                <section>
+                    <div style="float: left; width: 40%; padding-top: 20%;">
+                        <h2>Outline</h2>
+                    </div>
+                    <div style="float: left; width: 60%">
+                        <ul style="list-style-type: none;">
+                            <li>Background
+                                <ol style="font-size: 0.6em; list-style-type: circle;">
+                                    <li>The Planning Stack</li> 
+                                    <li>Motion Planning</li> 
+                                    <li>Speed, Cost, Quality</li> 
+                                    <li>Problem Statement</li> 
+                                </ol>
+                            </li>
+                            <li>Prior Work
+                                <ol style="font-size: 0.6em; list-style-type: circle;">
+                                    <li>Survey</li> 
+                                    <li>Graph Planning</li> 
+                                    <li>Optimization Planning</li> 
+                                </ol>
+                            </li>
+                            <li>Pattern Planning
+                                <ol style="font-size: 0.6em; list-style-type: circle;">
+                                    <li>Motivation</li> 
+                                    <li>Control Flow</li> 
+                                    <li>Trajectory Generation</li> 
+                                </ol>
+                            </li>
+                            <li>Planner Evaluation
+                                <ol style="font-size: 0.6em; list-style-type: circle;">
+                                    <li>Simulation</li> 
+                                    <li>Vehicle Testing</li> 
+                                </ol>
+                            </li>
+                            <li>Conclusion
+                            </li>
+                        </ul> 
+                    </div>
+                </section>
+
+
+                <!-- Slide 3: The Planning Stack -->
+                <section>
+                    <section>
+                        <h1>Background</h1>
+                    </section>
+
+                    <section data-transition="none-out">
+                        <div>
+                            <h2>The Planning Stack</h2>
+                            <object data="figures/Planning_Stack.png" style="float: center;"></object>
+                        </div>
+                    </section>
+                    <section data-transition="none-in">
+                        <div>
+                            <h2>The Planning Stack</h2>
+                            <object data="figures/MP_Stack.png" style="float: center;"></object>
+                        </div>
+                    </section>
+
+                    <!-- Slide 4: Motion Planning -->
+                    <section>
+                        <div>
+                            <h2>Motion Planning</h2>
+                            <object data="figures/examples.png" style="float: right; width: 30%;"></object>
+                            <div style="width: 70%; float: right;">
+                            <ul>
+                                <li>Accomplish a movement task.</li>
+                                <li>Adapt.
+                                    <ul style="font-size: 0.65em;">
+                                    <li>Real-Time Demands</li>
+                                    <li>Unknown Environments</li>
+                                    <li>Dynamic Environments</li>
+                                    </ul>
+                                </li>
+                                <li>Respect physical constraints.
+                                    <ul style="font-size: 0.65em;">
+                                    <li>Joint/Torque Limits</li>
+                                    <li>Avoid Obstacles</li>
+                                    </ul>
+                                </li>
+                                <li>Optimize.
+                                    <ul style="font-size: 0.65em;">
+                                    <li>Energy, Time</li>
+                                    <li>Safety, Comfort</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h2>Planning Speed</h2>
+                        <ul>
+                            <li>Planners checkpoint the world state and solve the instantaneous planning problem.</li>
+                                <ul style="font-size: 0.65em;">
+                                    <li>Worst case, the vehicle cannot react to a change for nearly two planning cycles.</li>
+                                </ul>
+                            <li>Highway driving requires rapid replanning.</li>
+                                <ul style="font-size: 0.65em;">
+                                    <li>cycle time $\leq$ 33ms (30Hz) is preferred. (~4ft. at 80mph).</li>
+                                    <li>cycle time $\geq$ 100ms (10Hz) is considered poor. (~12ft. at 80mph).</li>
+                                </ul>
+                            <li>Cycle Time $\propto$ Predictive Ability</li>
+                                <ul style="font-size: 0.65em;">
+                                    <li>Good prediction lessens the need for fast replanning.</li>
+                                    <li>Fast replanning reduces the impact of poor prediction.</li>
+                                    <li>Prediction is <strong>hard</strong>.</li>
+                                </ul>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Planning Cost</h2>
+                        <ul>
+                            <li>Computing power currently halves the range of GM's autonomous fleet.</li>
+                            <li>Many existing motion planners rely on high-end CPUs and GPUs to perform dense sampling of the trajectory state space in real time.</li>
+                            <li>Ideally, the motion planner would consume one thread on a commodity CPU.</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Trajectory Quality</h2>
+                        <ul>
+                            <li>Quantifying trajectory quality is a large component of the difficulty in planning.</li>
+                            <li>Many factors are obviously desirable.</li>
+                                <ul style="font-size: 0.65em;">
+                                    <li>Obstacle Avoidance.</li>
+                                    <li>Reaching the destination.</li>
+                                    <li>Occupant comfort.</li>
+                                    <li>Minimum Travel Time.</li>
+                                    <li>etc.</li>
+                                </ul>
+                            <li>Planning Time $\propto$ Trajectory Quality</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Problem Statement</h2>
+                        <ol>
+                            <li>Existing motion planning algorithms balance planning speed and trajectory quality while disregarding planning costs.</li>
+                            <li>No standard methods exist for quantifiably comparing the performance of motion planning algorithms.</li>
+                        </ol>
+                    </section>
+                </section>
+
+
+                <!-- Slide 5: Prior Work -->
+                <section>
+                    <section>
+                        <h1>Prior Work</h1>
+                    </section>
+
+                    <section data-transition="none-out">
+                        <h2>Prior Work</h2>
+                        <div style="display: grid; grid-template-columns: auto auto;">
+                            <div style="text-align: center; padding: 0.5em;">
+                                <h4>Graph-Search Based Planners</h4>
+                                <ul style="font-size: 0.65em;">
+                                    <li>Conformal Graph Planning.</li>
+                                    <li>Augmented Graph Planning.</li>
+                                </ul>
+                            </div>
+                            <div style="text-align: center; padding: 0.5em;">
+                                <h4>Optimization Based Planners</h4>
+                                <ul style="font-size: 0.65em;">
+                                    <li>Parametric Optimal Control</li>
+                                    <li>iLQR</li>
+                                </ul>
+                            </div>
+                            <div style="text-align: center; padding: 0.5em;">
+                                <h4>Sampling Based Planners</h4>
+                                <ul style="font-size: 0.65em;">
+                                    <li>Rapidly-exploring Random<br>Tree (RRT).</li>
+                                    <li>Probabilistic Roadmap (PRM).</li>
+                                </ul>
+                            </div>
+                            <div style="text-align: center; padding: 0.5em;">
+                                <h4>Interpolating Curve Planners</h4>
+                                <ul style="font-size: 0.65em;">
+                                    <li>Line and Circle Fitting.</li>
+                                    <li>Bezier Curves.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                    <section data-transition="none-in">
+                        <h2>Prior Work</h2>
+                        <div style="display: grid; grid-template-columns: auto auto;">
+                            <div style="text-align: center; padding: 0.5em;">
+                                <h4 style="color: #829817">Graph-Search Based Planners</h4>
+                                <ul style="font-size: 0.65em;">
+                                    <li>Conformal Graph Planning.</li>
+                                    <li>Augmented Graph Planning.</li>
+                                </ul>
+                            </div>
+                            <div style="text-align: center; padding: 0.5em;">
+                                <h4 style="color: #829817">Optimization Based Planners</h4>
+                                <ul style="font-size: 0.65em;">
+                                    <li>Parametric Optimal Control</li>
+                                    <li>iLQR</li>
+                                </ul>
+                            </div>
+                            <div style="text-align: center; padding: 0.5em;">
+                                <h4>Sampling Based Planners</h4>
+                                <ul style="font-size: 0.65em;">
+                                    <li>Rapidly-exploring Random<br>Tree (RRT).</li>
+                                    <li>Probabilistic Roadmap (PRM).</li>
+                                </ul>
+                            </div>
+                            <div style="text-align: center; padding: 0.5em;">
+                                <h4>Interpolating Curve Planners</h4>
+                                <ul style="font-size: 0.65em;">
+                                    <li>Line and Circle Fitting.</li>
+                                    <li>Bezier Curves.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h2>Conformal Graph Planning</h2>
+                        <div style="float: left; width: 50%">
+                            <ol style="font-size: 0.5em;">
+                                <li>Sample points in $(s, l)$ road coordinates.</li>
+                                <li>Generate kinematically feasible paths connecting sampled coordinates.</li>
+                                <li>For each path, generate a set of trajectories - each with a constant acceleration profile.</li>
+                                <li>Assign costs to each trajectory. (Exact formulation not specified).</li>
+                                <li>Choose final vertex to maximize forward progress and minimize time and cost.</li>
+                                <li>Backtrack from final vertex to construct the minimum cost trajectory.</li>
+                            </ol>
+                            <p style="font-size: 0.5em; color: #db3631;">Note: GPU acceleration required to meet realtime demands.</p>
+                            <p style="font-size: 0.4em;">
+                                "Motion Planning for Autonomous Driving with Conformal Spatiotemporal Lattice" McNaughton et al.
+                            </p>
+                        </div>
+                        <div style="float: right; width: 50%;">
+                            <object style="float: center; width: 60%;" data="figures/conformal_lattices.png"></object>
+                        </div>
+
+                    </section>
+
+                    <section>
+                        <h2>Augmented Graph Planning</h2>
+                        <div style="float: left; width: 50%;">
+                            <ol style="font-size: 0.5em;">
+                                <li>Construct a graph by sampling points (spatial nodes) at regular intervals along the road.</li>
+                                <li>Assign obstacle and lane-centering costs to each spatial node in the graph.</li>
+                                <li>Use the Bellman-Ford algorithm to construct a min. cost path through the graph.</li>
+                                <li>Use a path following algorithm (pure pursuit) to generate a kinematically feasible smooth path.</li>
+                                <li>Use constraint satisfaction to generate a reference velocity profile based on the speed limit and curvature of the road.</li>
+                                <li>Generate a pool of similar trajectories by sampling in space and velocity.</li>
+                                <li>Rank the pool of trajectories, and select the first ranked trajectory.</li>
+                            </ol>
+                            <p style="font-size: 0.4em;">
+                                "Runtime-Bounded Tunable Motion Planning for Autonomous Driving" Gu et al.
+                            </p>
+                        </div>
+                        <div style="float: right: width: 50%;">
+                            <object style="float: center; width: 40%;" data="figures/augmented_graph.png"></object>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h2>Optimization-Based<br>Trajectory Generation</h2>
+                        <div style="float: left; width: 50%; font-size: 0.5em;">
+                            <p>Solve the Boundary Value Problem connecting $\mathbf{X_s} = [x_0, y_0, \theta_0, \kappa_0]^\intercal$ to $\mathbf{X_e} = [x_e, y_e, \theta_e, \kappa_e]^\intercal$ while respecting vehicle kinematics.</p>
+                            <ol>
+                                <li>Parameterize vehicle controls as polynomials with unknown coefficients.</li>
+                                <li>Initialize the polynomial coefficients by solving the terminal heading and terminal curvature constraints explicitly.</li>
+                                <li>Use a shooting method to forward simulate the parameterized trajectory.</li>
+                                <li>Optimize over the polynomial coefficients to bring the final path state $\mathbf{X_f}$ into agreement with $\mathbf{X_e}.$</li>
+                                <li>More detail to follow soon.</li>
+                            </ol>
+                            <p style="font-size: 0.8em;">
+                                "Reactive Nonholonomic Trajectory Generation via Parametric Optimal Control" Kelly et al.
+                            </p>
+                        </div>
+                        <object style="float: right; width: 40%;" data="figures/forklift_obstacle.png"></object>
+                    </section>
+
+                    <section>
+                        <h2>Computational Complexity</h2>
+                        <div style="float: left; width: 45%">
+                            <h3>Graph-Search Based</h3>
+                            <ul style="font-size: 0.5em;">
+                                <li>The Conformal Lattice runs at 10Hz, using a GTX 260 to reoptimize and evaluate ~400,000 trajectories per cycle.</li>
+                                <li>The Augmented Graph Planner runs at 15-20Hz and evaluates ~4,000 spatial nodes and ~20,000 augmented nodes per cycle.</li>
+                            </ul>
+                        </div>
+                        <div style="float: right; width: 45%">
+                            <h3>Optimization-Based</h3>
+                            <ul style="font-size: 0.5em;">
+                                <li>While these methods can be made arbitrarily complex, the trajectory generator is extremely lightweight. Expect at least $650,000\frac{\text{paths}}{\text{sec}}$ per CPU thread.</li>
+                            </ul>
+                        </div>
+                        <aside class="notes">
+                            <ul>
+                            <li>The GTX 260 (circa 2008) consumes about 160 Watts and costs $30 today.</li>
+                            <li>On CPU alone (2008), it takes 0.6 seconds to run.</li>
+                            </ul>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h2>Global vs. Local Optimization</h2>
+                        <div style="float: center; width: 100%">
+                            <div style="float: left; width: 50%">
+                                <h3>Global Optimization</h3>
+                                <ul style="font-size: 0.5em;">
+                                    <li>Graph-Search planners attempt to search the full space of trajectories for the global optimum.</li>
+                                    <li>Graph-Search planners are <i>resolution-complete</i>. If a feasible plan exists and the graph resolution is fine enough, they are guaranteed to find it (eventually).</li>
+                                </ul>
+                            </div>
+                            <div style="float: left; width: 50%">
+                                <h3>Local Optimization</h3>
+                                <ul style="font-size: 0.5em;">
+                                    <li>Optimization-Based planners make no global guarantees. Given an initial plan, they will refine it to a local optimum.</li>
+                                    <li>If the initial plan is poor, the optimization will likely converge to a poor result.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="fragment" style="float: center; width: 100%; color: #db3631;">
+                            Can we combine the global search of the graph-based algorithms with the speed of the optimization-based algorithms?
+                        </div>
+                        <aside class="notes">
+                            <ul>
+                            <li>The GTX 260 (circa 2008) consumes about 160 Watts and costs $30 today.</li>
+                            <li>On CPU alone (2008), it takes 0.6 seconds to run.</li>
+                            </ul>
+                        </aside>
+                    </section>
+                </section>
+
+                <!-- Slide 6: Pattern Planning -->
+                <section>
+                    <section>
+                        <h1>Pattern Planning</h1>
+                    </section>
+
+                    <section>
+                        <h2>Motivation</h2>
+                        <ol style="width: 80%;">
+                            <li>Reduce hardware requirements and planning power consumption.</li>
+                            <li>Achieve global search with low computational cost.</li>
+                            <li>Sacrifice as little trajectory quality as possible.</li>
+                        </ol>
+                    </section>
+                    <section>
+                        <h2>Guided Local Optimization</h2>
+                        <div style="float: left; width: 50%">
+                            <ul>
+                                <li>Probe the global search space with a series of local optimizations.</li>
+                                <br>
+                                <li>Leverage the structure of the highway environment to prioritize exploration.</li>
+                            </ul>
+                        </div>
+
+                        <div style="float: right; width: 40%">
+                            <object style="float: center; width: 100%;" data="figures/guided_optimization.png"></object>
+                            <object style="float: center; width: 100%;" data="figures/guided_optimization_traffic.png"></object>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>Early Exit</h2>
+                        <div style="float: left; width: 50%">
+                            <ul>
+                                <li>Execute the first trajectory that achieves the current goal and is found to be sufficiently safe and comfortable.</li>
+                                <br>
+                                <li>Perfect answers are useless if they are found too late.</li>
+                            </ul>
+                        </div>
+                        <div style="float: right; width: 45%">
+                            <object style="float: center; width: 100%;" data="figures/early_exit.png"></object>
+                            <object style="float: center; width: 100%;" data="figures/early_exit_traffic.png"></object>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>The Maneuver Pattern</h2>
+                        <object style="float: center; width: 70%;" data="figures/traffic_zones.png"></object>
+                        <ul style="font-size: 0.8em; padding-top: 2%;">
+                            <li>The highway driving environment is naturally divided into zones by local traffic.</li>
+                            <li>A maneuver pattern groups all trajectories that begin at the vehicle and terminate in the same zone.</li> 
+                            <li>The maneuver pattern is an abstraction representing a basin of attraction for the trajectory optimization routine.</li> 
+                        </ul>
+                    </section>
+                    <section>
+                        <div style="float: left; width: 40%;">
+                            <h2>Control Flow</h2>
+                            <ul style="font-size: 0.6em;">
+                                <li>Generate a ranked list of possible maneuver patterns.
+                                    <ul style="font-size: 0.6em;">
+                                        <li>The previous pattern will generally rank first.</li>
+                                        <li>A command from the behavior planner will elevate the priority of all relevant maneuver(s).</li>
+                                        <li>In the absence of behavioral commands, lane keeping outranks lane changing, and lane-keeping maneuvers are ranked by estimated safety.</li>
+                                    </ul>
+                                </li>
+                                <li>Evaluate the top ranked pattern by generating a default trajectory.</li>
+                                <li>If it is safe and comfortable, execute it.</li>
+                                <li>Otherwise, refine it via local optimization.</li>
+                                <li>If it is still not safe, return to the list of patterns and evaluate the next ranked pattern.</li>
+                            </ul>
+                        </div>
+                        <object style="float: right; width: 50%;" data="figures/pattern_planning.png"></object>
+                    </section>
+
+                    <section>
+                        <div style="float: left; width: 40%;">
+                            <h2>Emergency Response</h2>
+                            <ul style="font-size: 0.6em;">
+                                <li>If a safe, comfortable trajectory cannot be found, remove the comfort requirement.</li>
+                                <li>Prioritize emergency braking maneuvers.</li>
+                                <li>Re-evaluate the maneuver pattern list and immediately execute the first safe trajectory that is found.</li>
+                            </ul>
+                        </div>
+                        <object style="float: right; width: 50%;" data="figures/pattern_planning.png"></object>
+                    </section>
+
+                    <section>
+                        <h1>Trajectory Generation Details</h1>
+                    </section>
+                    <section>
+                        <h2>The Kinematic Bicycle Model</h2>
+                        <div style="float: right; width: 30%; font-size: 0.7em;" >
+                            <object style="width: 100%;" data="figures/bicycle_model.png"></object>
+                            $\kappa = \frac{tan(\delta)}{L}$
+                        </div>
+                        <div style="float: left; width: 65%; font-size: 0.7em;">
+                            $
+                            \boldsymbol{\dot x}(t) = \boldsymbol{f}(\boldsymbol{x}(t), \boldsymbol{u}(t), t) = 
+                            \begin{bmatrix}
+                                v \cdot cos(\theta) \\
+                                v \cdot sin(\theta) \\
+                                v \cdot \kappa \\
+                                u_{\dot k}(t) \\
+                                a \\
+                                u_{\dot a}(t) \\
+                            \end{bmatrix}
+                            $
+                            <br><br>
+                            $
+                            \boldsymbol{x} = \begin{bmatrix} x & y & \theta & \kappa & v & a \end{bmatrix}^\intercal
+                            \hspace{4mm}
+                            \boldsymbol{u} = \begin{bmatrix} \dot{\kappa} & \dot{a} \end{bmatrix}^\intercal
+                            $
+                        </div>
+                    </section>
+
+                    <section>
+                        <h2>Parametric Controls</h2>
+                            Parameterize the controls
+                            $
+                            \boldsymbol{u}(t) =
+                            \begin{bmatrix} \dot{\kappa}(t) & \dot{a}(t) \end{bmatrix}^\intercal
+                            $
+                            as polynomials defined on an interval $0 \leq t \leq T_f$.<br><br>
+                            $
+                            \boldsymbol{u}(t) =
+                            \begin{bmatrix} c_0+c_1 t+c_2 t^2 + ... + c_{n-1} t^{n-1} \\ 
+                                            d_0+d_1 t+d_2 t^2 + ... + d_{m-1} t^{m-1}
+                            \end{bmatrix}^\intercal
+                            $
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Forward Shooting</h2>
+                        <div style="float: left; width: 50%; font-size: 0.7em;">
+                            <p style="text-align: left;">
+                            Given a control sequence parameterized by $\begin{bmatrix} c_0...c_{n-1} & d_0...d_{n-1} & T_f \end{bmatrix}^\intercal$
+                            and an initial state $\mathbf{X_{s}}$, the vehicle state can be found by numerically integrating the kinematic equations:
+                            <br><br>
+                            $ \mathbf{X}(t) = \mathbf{X_s} + \int_0^t{\mathbf{f}(\mathbf{x}(t'), \mathbf{u}(t'), t') dt'} $
+                            </p>
+                        </div>
+                        <div style="float: right; width: 50%; font-size: 0.5em;">
+                            <object style="width: 100%;" data="figures/shooting_example.png"></object>
+                            <div style="float: center; width: 100%">
+                            $\mathbf{X_s} = \begin{bmatrix} 0 & 0 & \frac{\pi}{2} & 0 & 1 & 0 \end{bmatrix}^\intercal$
+                            <br>
+                            $\dot{\kappa} = 0.078 - 0.123t + 0.017t^2 + 0.001t^3$
+                            <br>
+                            $\dot{a} = -0.094 + 0.143t + 0.029t^2 - 0.009t^3$
+                            <br>
+                            $0 \leq t \leq 7.478$
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h2>Path Optimization</h2>
+                        <div style="float: left; width: 50%">
+                            <ol style="font-size: 0.7em;">
+                                <li>Set $\mathbf{u}_{\dot{a}}(t) = 0$</li>
+                                <li>Set $T_f = R(1+\frac{\theta^2}{5})$</li>
+                                <li>Select coefficients of $\mathbf{u}_{\dot{a}}(t)$ to satisfy endpoint heading and curvature constraints.</li>
+                                <li>
+                                    Use Newton's Method with the cost function $(\mathbf{X}(T_f)-\mathbf{X_e})^\intercal \mathbf{D} (\mathbf{X}(T_f)-\mathbf{X_e})$
+                                    to iteratively move the trajectory endpoint to the desired position $\mathbf{X_e}$ by perturbing $T_f$ and $c_0...c_{n-1}$.
+                                </li>
+                            </ol>
+                        </div>
+                        <object style="float: right; width: 45%;" data="figures/pathopt.gif"></object>
+                    </section>
+                    <section>
+                        <h2>Path Caching</h2>
+                        <object style="float: right; width: 50%;" data="figures/path_cache.png"></object>
+                        <div style="float: left; width: 45%; font-size: 0.7em;">
+                        <ul>
+                            <li>Paths can be scaled to the unit circle and cached for future use.</li>
+                            <br>
+                            <li>At runtime, scale the problem to the unit circle and select the most similar path.
+                                Scale the cached parameters to the size you need and use them to warm-start the optimization.
+                            </li>
+                        </ul>
+                        </div>
+                    </section>
+
+                    <!-- Slide ?: Trajectory Optimization -->
+                    <section>
+                        <h2>Trajectory Optimization</h2>
+                        <div style="float: left; width: 40%; font-size: 0.6em;">
+                            <ul>
+                                <li>Use the procedure from the previous slide to generate a path without regard for obstacles, velocities, or accelerations.</li>
+                                <li>Reoptimize with initial parameters $\begin{bmatrix} c_0...c_{n-1} & 0...0 & T_f\end{bmatrix}$.</li>
+                                <li>
+                                    Use a cost function that measures the following path costs in addition to endpoint state matching costs.
+                                    <ul>
+                                        <li>min. distance to an obstacle</li>
+                                        <li>max. lateral acceleration</li>
+                                        <li>max. deviation from the road centerline</li>
+                                        <li>etc.</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <object style="float: right; width: 50%;" data="figures/traj_opt_example.png"></object>
+                    </section>
+
+                    <section>
+                        <h2>Trajectory Optimization Cont.</h2>
+                        <div style="float: left; width: 40%; font-size: 0.6em;">
+                            <p style="text-align: left;">
+                            Modify the terminal cost components to accomplish the following goals:
+                            <ol style="font-size: 0.8em;">
+                                <li>Terminate in the center of the desired maneuver pattern zone.</li>
+                                <li>Match terminal heading, curvature and speed to the desired zone centerline.</li>
+                                <li>Make forward progress.</li>
+                            </ol>
+                            </p>
+                        </div>
+                        <object style="float: right; width: 50%;" data="figures/traj_opt_example.png"></object>
+                        <aside class="notes">
+                            TODO: Fix this diagram.
+                        </aside>
+                    </section>
+                </section>
+
+
+                <section>
+                    <section>
+                        <h1>Planner Evaluation</h1>
+                    </section>
+                    <section>
+                        <h2>SwerveSim</h2>
+                        <div style="float: left; width: 40%; font-size: 0.5em;">
+                            <ul>
+                                <li>Comparing Planners is difficult because there is no universally applicable objective standard for trajectories.</li>
+                                <br>
+                                <li>SwerveSim places two or more vehicles with different planning algorithms in otherwise identical vehicles in an identical traffic-filled world.</li>
+                                <br>
+                                <li>Vehicles under test are not aware of each other. They are competing to incur the lowest cost as the traverse the SwerveSim track.</li>
+                                <br>
+                                <li>SwerveSim gives the user control of the cost function used to score the planners.
+                                    <ul>
+                                        <li>Available cost terms will include common trajectory cost terms as well as computational cost metrics.</li> 
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <object style="float: right; width: 50%;" data="figures/simulator_interface.png"></object>
+                    </section>
+
+                    <section>
+                        <h2>SwerveSim</h2>
+                        <video data-autoplay>
+                            <source src="figures/swervesim.mp4" type="video/mp4" />
+                        </video>
+                    </section>
+
+                    <section>
+                        <h2>Vehicle Testing</h2>
+                        Testing on GM's autonomous Chevy Volts is tentatively scheduled for early June.<br><br>
+                        <object style="float: center; width: 80%;" data="figures/chevy_volt.jpg"></object>
+                    </section>
+                </section>
+
+                <!-- Slide ?: Conclusion -->
+                <section>
+                    <section>
+                        <h1>Conclusion</h1>
+                    </section>
+
+                    <section>
+                        <h2>Conclusion</h2>
+                        <ul style="font-size: 0.7em;">
+                            <li>We introduce Pattern Planning, a motion planning algorithm designed to reduce the dollar cost of planning performance.</li>
+                            <br>
+                            <li>Pattern Planning performs a series of guided local optimizations to intelligently probe the trajectory search space.</li>
+                            <br>
+                            <li>The Pattern Planning algorithm pursues an early-exit strategy. The first sufficiently low cost trajectory to be found is immediately executed.</li>
+                            <br>
+                            <li>In order to demonstrate the effectiveness of the Pattern Planning approach, we introduce SwerveSim,
+                                a planner benchmarking environment which enables direct comparison of competing planning algorithms.
+                            </li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2>Citations</h2>
+                        <ul>
+                            <li>A. Kelly, <i>Mobile robotics: mathematics, models, and methods.</i> New York, NY: Cambrige Univ. Press, 2013.</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2>Figures</h1>
+                        <ul>
+                            <li>A. Kelly, <i>Mobile robotics: mathematics, models, and methods.</i> New York, NY: Cambrige Univ. Press, 2013.</li>
+                            <li><i>IKV High Efficiency 6-axis Robot Arm. IKV Robotics.</i></li>
+                        </ul>
+                    </section>
+                </section>
+
+
+            </div>
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+            // More info about config & dependencies:
+            // - https://github.com/hakimel/reveal.js#configuration
+            // - https://github.com/hakimel/reveal.js#dependencies
+            Reveal.initialize({
+                controlsLayout: "edges",
+                slideNumber: true,
+                progress: true,
+                transition: 'slide',
+                transitionSpeed: 'fast',
+                dependencies: [
+                    { src: 'plugin/markdown/marked.js' },
+                    { src: 'plugin/markdown/markdown.js' },
+                    { src: 'plugin/notes/notes.js', async: true },
+                    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'plugin/math/math.js', async: true }
+                ]
+            });
+        </script>
+    </body>
+</html>
