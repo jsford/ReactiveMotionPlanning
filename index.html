@@ -85,13 +85,19 @@
                     <section data-transition="none-out">
                         <div>
                             <h2><span style="color: #92A0A0">Background</span> Planning Stack</h2>
-                            <object data="figures/Planning_Stack.png" style="float: center;"></object>
+                            <object data="figures/Planning_Stack.png" style="float: center; width: 80%;"></object>
+                        </div>
+                        <div style="font-size: 0.3em; float: right;">
+                            Kelly, A. (2013). <i>Mobile Robotics:<br>Mathematics, Models, and Methods.</i> Cambridge University Press
                         </div>
                     </section>
                     <section data-transition="none-in">
                         <div>
                             <h2><span style="color: #92A0A0">Background</span> Planning Stack</h2>
-                            <object data="figures/MP_Stack.png" style="float: center;"></object>
+                            <object data="figures/MP_Stack.png" style="float: center; width: 80%;"></object>
+                        </div>
+                        <div style="font-size: 0.3em; float: right;">
+                            Kelly, A. (2013). <i>Mobile Robotics:<br>Mathematics, Models, and Methods.</i> Cambridge University Press
                         </div>
                     </section>
 
@@ -169,12 +175,6 @@
                                     <li>cycle time $\leq$ 33ms (30Hz) is preferred. (~4ft. at 80mph).</li>
                                     <li>cycle time $\geq$ 100ms (10Hz) is considered poor. (~12ft. at 80mph).</li>
                                 </ul>
-                            <li>Cycle Time $\propto$ Predictive Ability</li>
-                                <ul style="font-size: 0.65em;">
-                                    <li>Good prediction lessens the need for fast replanning.</li>
-                                    <li>Fast replanning reduces the impact of poor prediction.</li>
-                                    <li>Prediction is <strong>hard</strong>.</li>
-                                </ul>
                         </ul>
                     </section>
 
@@ -190,7 +190,6 @@
                                     <li>Minimum Travel Time.</li>
                                     <li>etc.</li>
                                 </ul>
-                            <li>Planning Time $\propto$ Trajectory Quality</li>
                         </ul>
                     </section>
 
@@ -203,14 +202,6 @@
                         </ul>
                     </section>
 
-                    <section>
-                        <h2><span style="color: #92A0A0">Background</span> Problem Statement</h2>
-                        <ol style="font-size: 0.8em;">
-                            <li><b>Quantitative comparison of planner performance is difficult.</b> There are desirable and undesirable features, but no universal agreement on how to fuse them into a single scalar cost.</li>
-                            <br>
-                            <li>Until recently, the hardware and power costs of planning have not played a major part in planning algorithm design. <b>Researchers can afford expensive hardware and high power consumption, but consumers cannot.</b></li>
-                        </ol>
-                    </section>
                 </section>
 
 
@@ -224,31 +215,31 @@
                         <h2>Prior Art</h2>
                         <div style="display: grid; grid-template-columns: auto auto;">
                             <div style="text-align: center; padding: 0.5em;">
-                                <h4>Graph-Search Based Planners</h4>
+                                <h4>Graph-Search Methods</h4>
                                 <ul style="font-size: 0.65em;">
-                                    <li>Conformal Graph Planning.</li>
-                                    <li>Augmented Graph Planning.</li>
+                                    <li>Conformal Graph Planning</li>
+                                    <li>Augmented Graph Planning</li>
                                 </ul>
                             </div>
                             <div style="text-align: center; padding: 0.5em;">
-                                <h4>Optimization Based Planners</h4>
+                                <h4>Variational Methods</h4>
                                 <ul style="font-size: 0.65em;">
                                     <li>Parametric Optimal Control</li>
-                                    <li>iLQR</li>
+                                    <li>Iterative Linear Quadratic Requlator</li>
                                 </ul>
                             </div>
                             <div style="text-align: center; padding: 0.5em;">
-                                <h4>Sampling Based Planners</h4>
+                                <h4>Geometric Methods</h4>
                                 <ul style="font-size: 0.65em;">
-                                    <li>Rapidly-exploring Random<br>Tree (RRT).</li>
-                                    <li>Probabilistic Roadmap (PRM).</li>
+                                    <li>Visibility Graph</li>
+                                    <li>Cell Decomposition</li>
                                 </ul>
                             </div>
                             <div style="text-align: center; padding: 0.5em;">
-                                <h4>Interpolating Curve Planners</h4>
+                                <h4>Incremental Search</h4>
                                 <ul style="font-size: 0.65em;">
-                                    <li>Line and Circle Fitting.</li>
-                                    <li>Bezier Curves.</li>
+                                    <li>Rapidly exploring Random Trees (RRT)</li>
+                                    <li>Probabilistic Road Maps </li>
                                 </ul>
                             </div>
                         </div>
@@ -257,35 +248,64 @@
                         <h2>Prior Art</h2>
                         <div style="display: grid; grid-template-columns: auto auto;">
                             <div style="text-align: center; padding: 0.5em;">
-                                <h4 style="color: #829817">Graph-Search Based Planners</h4>
+                                <h4 style="color: #829817">Graph-Search Methods</h4>
                                 <ul style="font-size: 0.65em;">
-                                    <li>Conformal Graph Planning.</li>
-                                    <li>Augmented Graph Planning.</li>
+                                    <li>Conformal Graph Planning</li>
+                                    <li>Augmented Graph Planning</li>
                                 </ul>
                             </div>
                             <div style="text-align: center; padding: 0.5em;">
-                                <h4 style="color: #829817">Optimization Based Planners</h4>
+                                <h4 style="color: #829817">Variational Methods</h4>
                                 <ul style="font-size: 0.65em;">
                                     <li>Parametric Optimal Control</li>
-                                    <li>iLQR</li>
+                                    <li>Iterative Linear Quadratic Requlator</li>
                                 </ul>
                             </div>
                             <div style="text-align: center; padding: 0.5em;">
-                                <h4>Sampling Based Planners</h4>
+                                <h4>Geometric Methods</h4>
                                 <ul style="font-size: 0.65em;">
-                                    <li>Rapidly-exploring Random<br>Tree (RRT).</li>
-                                    <li>Probabilistic Roadmap (PRM).</li>
+                                    <li>Visibility Graph</li>
+                                    <li>Cell Decomposition</li>
                                 </ul>
                             </div>
                             <div style="text-align: center; padding: 0.5em;">
-                                <h4>Interpolating Curve Planners</h4>
+                                <h4>Incremental Search</h4>
                                 <ul style="font-size: 0.65em;">
-                                    <li>Line and Circle Fitting.</li>
-                                    <li>Bezier Curves.</li>
+                                    <li>Rapidly exploring Random Trees (RRT)</li>
+                                    <li>Probabilistic Road Maps </li>
                                 </ul>
                             </div>
                         </div>
                     </section>
+
+                    <section>
+                        <h2><span style="color: #92A0A0">Prior Art</span> Global vs.<br>Local Optimization</h2>
+                        <div style="float: center; width: 100%;">
+                            <div style="float: left; width: 45%; padding-right: 5%;">
+                                <h3>Global Optimization</h3>
+                                <ul style="font-size: 0.6em;">
+                                    <li>Graph-Search planners attempt to search the full space of trajectories for the global optimum.</li>
+                                    <li>Graph-Search planners are <i>resolution-complete</i>. If a feasible plan exists and the graph resolution is fine enough, they are guaranteed to find it (eventually).</li>
+                                </ul>
+                            </div>
+                            <div style="float: right; width: 45%; padding-left: 5%;">
+                                <h3>Local Optimization</h3>
+                                <ul style="font-size: 0.6em;">
+                                    <li>Optimization-Based planners make no global guarantees. Given an initial plan, they will refine it to a local optimum.</li>
+                                    <li>If the initial plan is poor, the optimization will likely converge to a poor result.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <aside class="notes">
+                            <ul>
+                            <li>Can we combine the global search of the graph-based algorithms with the speed of the optimization-based algorithms?</li>
+                            <li>The GTX 260 (circa 2008) consumes about 160 Watts and costs $30 today.</li>
+                            <li>On CPU alone (2008), it takes 0.6 seconds to run.</li>
+                            </ul>
+                        </aside>
+                    </section>
+
 
                     <section>
                         <h2><span style="color: #92A0A0">Prior Art</span> Conformal<br>Graph Planning</h2>
@@ -371,33 +391,16 @@
                         </aside>
                     </section>
 
-                    <section>
-                        <h2><span style="color: #92A0A0">Prior Art</span> Global vs.<br>Local Optimization</h2>
-                        <div style="float: center; width: 100%;">
-                            <div style="float: left; width: 45%; padding-right: 5%;">
-                                <h3>Global Optimization</h3>
-                                <ul style="font-size: 0.6em;">
-                                    <li>Graph-Search planners attempt to search the full space of trajectories for the global optimum.</li>
-                                    <li>Graph-Search planners are <i>resolution-complete</i>. If a feasible plan exists and the graph resolution is fine enough, they are guaranteed to find it (eventually).</li>
-                                </ul>
-                            </div>
-                            <div style="float: right; width: 45%; padding-left: 5%;">
-                                <h3>Local Optimization</h3>
-                                <ul style="font-size: 0.6em;">
-                                    <li>Optimization-Based planners make no global guarantees. Given an initial plan, they will refine it to a local optimum.</li>
-                                    <li>If the initial plan is poor, the optimization will likely converge to a poor result.</li>
-                                </ul>
-                            </div>
-                        </div>
+                </section>
 
-                        <aside class="notes">
-                            <ul>
-                            <li>Can we combine the global search of the graph-based algorithms with the speed of the optimization-based algorithms?</li>
-                            <li>The GTX 260 (circa 2008) consumes about 160 Watts and costs $30 today.</li>
-                            <li>On CPU alone (2008), it takes 0.6 seconds to run.</li>
-                            </ul>
-                        </aside>
-                    </section>
+                <!-- Problem Statement -->
+                <section>
+                    <h1>Problem Statement</h1>
+                    <ol style="font-size: 0.8em;">
+                        <li><b>Quantitative comparison of planner performance is difficult.</b> There are desirable and undesirable features, but no universal agreement on how to fuse them into a single scalar cost.</li>
+                        <br>
+                        <li>Until recently, the hardware and power costs of planning have not played a major part in planning algorithm design. <b>Researchers can afford expensive hardware and high power consumption, but consumers cannot.</b></li>
+                    </ol>
                 </section>
 
                 <!-- Slide 6: Pattern Planning -->
@@ -406,14 +409,6 @@
                         <h1>Pattern Planning</h1>
                     </section>
 
-                    <section>
-                        <h2><span style="color: #92A0A0">Pattern Planning</span> Motivation</h2>
-                        <ol style="width: 80%;">
-                            <li>Reduce hardware requirements and planning power consumption.</li>
-                            <li>Achieve global search with low computational cost.</li>
-                            <li>Sacrifice as little trajectory quality as possible.</li>
-                        </ol>
-                    </section>
                     <section>
                         <h2><span style="color: #92A0A0">Pattern Planning</span><br>Guided Local Optimization</h2>
                         <div style="float: left; width: 50%; font-size: 0.8em;">
@@ -455,8 +450,8 @@
                         </div>
                     </section>
                     <section>
-                        <h2><span style="color: #92A0A0">Pattern Planning</span> Control Flow</h2>
                         <div style="float: left; width: 40%;">
+                            <h3><span style="color: #92A0A0">Pattern Planning<br></span> Control Flow</h3>
                             <ul style="font-size: 0.6em;">
                                 <li>Generate a ranked list of possible maneuver patterns.
                                     <ul style="font-size: 0.6em;">
@@ -471,20 +466,46 @@
                                 <li>If it is still not safe, return to the list of patterns and evaluate the next ranked pattern.</li>
                             </ul>
                         </div>
-                        <object style="float: right; width: 40%;" data="figures/pattern_planning.png"></object>
+                        <object style="float: right; width: 55%;" data="figures/pattern_planning.png"></object>
                     </section>
 
                     <section>
-                        <div style="float: left; width: 60%;">
-                            <h2><span style="color: #92A0A0">Pattern Planning</span> Emergency Response</h2>
+                        <div style="float: left; width: 40%;">
+                            <h3><span style="color: #92A0A0">Pattern Planning</span> Emergency Response</h3>
                             <ul style="font-size: 0.6em;">
                                 <li>If a safe, comfortable trajectory cannot be found, remove the comfort requirement.</li>
                                 <li>Prioritize emergency braking maneuvers.</li>
                                 <li>Re-evaluate the maneuver pattern list and immediately execute the first safe trajectory that is found.</li>
                             </ul>
                         </div>
-                        <object style="float: right; width: 40%; padding-top: 5%;" data="figures/pattern_planning.png"></object>
+                        <object style="float: right; width: 55%;" data="figures/pattern_planning.png"></object>
                     </section>
+
+                    <section>
+                        <h2><span style="color: #92A0A0">Pattern Planning</span><br>Lane-Keeping Example</h2>
+                        <object style="float: center; width: 100%;" data="figures/lane_keeping_example.png"></object>
+                    </section>
+
+                    <section>
+                        <h2><span style="color: #92A0A0">Pattern Planning</span><br>Hysteresis Example</h2>
+                        <object style="float: center; width: 100%;" data="figures/lane_keeping_example.png"></object>
+                    </section>
+
+                    <section>
+                        <h2><span style="color: #92A0A0">Pattern Planning</span><br>Successful Lane Change Example</h2>
+                        <object style="float: center; width: 100%;" data="figures/lane_change_succeeded_example.png"></object>
+                    </section>
+
+                    <section>
+                        <h2><span style="color: #92A0A0">Pattern Planning</span><br>Failed Lane Change Example</h2>
+                        <object style="float: center; width: 100%;" data="figures/lane_change_failed_example.png"></object>
+                    </section>
+
+                    <section>
+                        <h2><span style="color: #92A0A0">Pattern Planning</span><br>Emergency Example</h2>
+                        <object style="float: center; width: 100%;" data="figures/emergency_example.png"></object>
+                    </section>
+
 
                 </section>
                 <section>
