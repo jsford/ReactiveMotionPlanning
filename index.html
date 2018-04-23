@@ -52,14 +52,14 @@
                                 <ol style="font-size: 0.6em; list-style-type: circle;">
                                     <li>Survey</li> 
                                     <li>Graph Planning</li> 
-                                    <li>Optimization Planning</li> 
+                                    <li>Variational Planning</li> 
                                 </ol>
                             </li>
                             <li>Pattern Planning
                                 <ol style="font-size: 0.6em; list-style-type: circle;">
                                     <li>Motivation</li> 
                                     <li>Control Flow</li> 
-                                    <li>Trajectory Generation</li> 
+                                    <li>Examples</li> 
                                 </ol>
                             </li>
                             <li>Trajectory Generation</li>
@@ -371,14 +371,14 @@
                     <section>
                         <h2><span style="color: #92A0A0">Prior Art</span><br>Computational Complexity</h2>
                         <div style="float: left; width: 45%">
-                            <h3>Graph-Search Based</h3>
+                            <h3>Graph-Search Methods</h3>
                             <ul style="font-size: 0.6em;">
                                 <li>The Conformal Lattice runs at 10Hz, using a GTX 260 to reoptimize and evaluate ~400,000 trajectories per cycle.</li>
                                 <li>The Augmented Graph Planner runs at 15-20Hz and evaluates ~4,000 spatial nodes and ~20,000 augmented nodes per cycle.</li>
                             </ul>
                         </div>
                         <div style="float: right; width: 45%">
-                            <h3>Optimization-Based</h3>
+                            <h3>Variational Methods</h3>
                             <ul style="font-size: 0.6em;">
                                 <li>While these methods can be made arbitrarily complex, the trajectory generator is extremely lightweight. Expect at least $650,000\frac{\text{paths}}{\text{sec}}$ per CPU thread.</li>
                             </ul>
@@ -488,7 +488,7 @@
 
                     <section>
                         <h2><span style="color: #92A0A0">Pattern Planning</span><br>Hysteresis Example</h2>
-                        <object style="float: center; width: 100%;" data="figures/lane_keeping_example.png"></object>
+                        <object style="float: center; width: 80%;" data="figures/hysteresis_example.png"></object>
                     </section>
 
                     <section>
@@ -632,7 +632,7 @@
                     </section>
 
                     <section>
-                        <h2><span style="color: #92A0A0">Details</span> Trajectory Optimization<br> Optimization Cont.</h2>
+                        <h2><span style="color: #92A0A0">Details</span> Trajectory Optimization</h2>
                         <div style="float: left; width: 40%; font-size: 0.6em;">
                             <p style="text-align: left;">
                             Modify the terminal cost components to accomplish the following goals:
