@@ -438,7 +438,8 @@
                             <object style="float: center; width: 100%;" data="figures/early_exit_traffic.png"></object>
                         </div>
                     </section>
-                    <section>
+
+                    <!--section>
                         <h2 style="float: left; width: 50%;"><span style="color: #92A0A0">Pattern Planning</span><br>The Maneuver Pattern</h2>
                         <div style="float: right; width: 50%;">
                             <object style="float: center; width: 100%; padding-top: 10%;" data="figures/traffic_zones.png"></object>
@@ -448,38 +449,47 @@
                                 <li>The maneuver pattern is an abstraction representing a basin of attraction for the trajectory optimization routine.</li> 
                             </ul>
                         </div>
-                    </section>
+                    </section-->
+
                     <section>
-                        <div style="float: left; width: 40%;">
-                            <h3><span style="color: #92A0A0">Pattern Planning<br></span> Control Flow</h3>
-                            <ul style="font-size: 0.6em;">
-                                <li>Generate a ranked list of possible maneuver patterns.
-                                    <ul style="font-size: 0.6em;">
-                                        <li>The previous pattern will generally rank first.</li>
-                                        <li>A command from the behavior planner will elevate the priority of all relevant maneuver(s).</li>
-                                        <li>In the absence of behavioral commands, lane keeping outranks lane changing, and lane-keeping maneuvers are ranked by estimated safety.</li>
-                                    </ul>
-                                </li>
-                                <li>Evaluate the top ranked pattern by generating a default trajectory.</li>
-                                <li>If it is safe and comfortable, execute it.</li>
-                                <li>Otherwise, refine it via local optimization.</li>
-                                <li>If it is still not safe, return to the list of patterns and evaluate the next ranked pattern.</li>
+                        <h2 style="float: left; width: 40%;"><span style="color: #92A0A0">Pattern Planning</span> Maneuver Pattern</h2>
+                        <div style="float: right; width: 60%;">
+                            <object style="float: center; width: 100%; padding-top: 10%;" data="figures/planning_details.png"></object>
+                            <ul style="float: center; width: 100%; font-size: 0.6em; padding-top: 2%;">
+                                <li>The highway driving environment is naturally segmented by local traffic.</li>
+                                <li>It is convenient to abstract away from individual trajectories.</li> 
+                                <li>All trajectories that terminate on the blue line are considered part of the same pattern.</li> 
                             </ul>
                         </div>
-                        <object style="float: right; width: 55%;" data="figures/pattern_planning.png"></object>
                     </section>
 
                     <section>
                         <div style="float: left; width: 40%;">
-                            <h3><span style="color: #92A0A0">Pattern Planning</span> Emergency Response</h3>
+                            <span style="font-size: 1.2em;"><h3><span style="color: #92A0A0;">Pattern Planning<br></span> Control Flow</h3></span>
                             <ul style="font-size: 0.6em;">
-                                <li>If a safe, comfortable trajectory cannot be found, remove the comfort requirement.</li>
-                                <li>Prioritize emergency braking maneuvers.</li>
-                                <li>Re-evaluate the maneuver pattern list and immediately execute the first safe trajectory that is found.</li>
+                                <li>Generate a ranked list of maneuver patterns.</li>
+                                <li>Take the top ranked pattern, and generate a trajectory using it.</li>
+                                <li>If the trajectory is safe and (optionally) comfortable, execute it.</li>
+                                <li>Else, return to the list of patterns and evaluate the next ranked pattern.</li>
                             </ul>
                         </div>
-                        <object style="float: right; width: 55%;" data="figures/pattern_planning.png"></object>
+                        <object style="float: right; width: 55%;" data="figures/flowchart.png"></object>
                     </section>
+
+                    <section>
+                        <div style="float: left; width: 40%;">
+                            <span style="font-size: 1.2em;"><h3><span style="color: #92A0A0;">Pattern Planning<br></span> Pattern Ranking</h3></span>
+                            <ul style="font-size: 0.6em;">
+                                <li>Define a maneuver pattern for each neigboring gap.</li>
+                                <li>At steady state, consider the pattern from the previous planning cycle first.</li>
+                                <li>At steady state, consider the lane-keeping pattern next.</li>
+                                <li>At steady state, consider lane-change maneuvers in order by estimated safety.</li>
+                                <li>If the behavioral planner commands a lane change, consider those maneuvers first.</li>
+                            </ul>
+                        </div>
+                        <object style="float: right; width: 55%;" data="figures/flowchart.png"></object>
+                    </section>
+
 
                     <section>
                         <h2><span style="color: #92A0A0">Pattern Planning</span><br>Lane-Keeping Example</h2>
@@ -502,10 +512,21 @@
                     </section>
 
                     <section>
+                        <div style="float: left; width: 40%;">
+                            <span style="font-size: 1.1em;"><h3><span style="color: #92A0A0;">Pattern Planning<br></span> Emergency Response</h3></span>
+                            <ul style="font-size: 0.6em;">
+                                <li>If all maneuvers are infeasible, remove the comfort requirement.</li>
+                                <li>Prioritize emergency braking maneuvers.</li>
+                                <li>Re-evaluate the maneuver pattern list and immediately execute the first safe trajectory that is found.</li>
+                            </ul>
+                        </div>
+                        <object style="float: right; width: 55%;" data="figures/flowchart.png"></object>
+                    </section>
+
+                    <section>
                         <h2><span style="color: #92A0A0">Pattern Planning</span><br>Emergency Example</h2>
                         <object style="float: center; width: 100%;" data="figures/emergency_example.png"></object>
                     </section>
-
 
                 </section>
                 <section>
