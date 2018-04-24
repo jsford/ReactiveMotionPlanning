@@ -397,9 +397,9 @@
                 <section>
                     <h1>Problem Statement</h1>
                     <ol style="font-size: 0.8em;">
-                        <li><b>Quantitative comparison of planner performance is difficult.</b> There are desirable and undesirable features, but no universal agreement on how to fuse them into a single scalar cost.</li>
-                        <br>
                         <li>Until recently, the hardware and power costs of planning have not played a major part in planning algorithm design. <b>Researchers can afford expensive hardware and high power consumption, but consumers cannot.</b></li>
+                        <br>
+                        <li><b>Quantitative comparison of planner performance is difficult.</b> There are desirable and undesirable features, but no universal agreement on how to fuse them into a single scalar cost.</li>
                     </ol>
                 </section>
 
@@ -651,24 +651,6 @@
                         </div>
                         <object style="float: right; width: 50%;" data="figures/traj_opt_example.png"></object>
                     </section>
-
-                    <section>
-                        <h2><span style="color: #92A0A0">Details</span> Trajectory Optimization</h2>
-                        <div style="float: left; width: 40%; font-size: 0.6em;">
-                            <p style="text-align: left;">
-                            Modify the terminal cost components to accomplish the following goals:
-                            <ol style="font-size: 0.8em;">
-                                <li>Terminate in the center of the desired maneuver pattern zone.</li>
-                                <li>Match terminal heading, curvature and speed to the desired zone centerline.</li>
-                                <li>Make forward progress.</li>
-                            </ol>
-                            </p>
-                        </div>
-                        <object style="float: right; width: 50%;" data="figures/traj_opt_example.png"></object>
-                        <aside class="notes">
-                            TODO: Fix this diagram.
-                        </aside>
-                    </section>
                 </section>
 
                 <section>
@@ -717,32 +699,32 @@
 
                     <section>
                         <h2>Conclusion</h2>
-                        <ul style="font-size: 0.6em;">
-                            <li>Quantitative comparison of planner performance is difficult. There are desirable and undesirable features, but no universal agreement on how to fuse them into a single scalar cost.</li>
+                        <ol style="font-size: 0.9em;">
+                            <li>Motion planning is expensive - time, money, power.
                             <br>
-                            <li>Until recently, the hardware and power costs of planning have not played a major part in planning algorithm design. Researchers can afford expensive hardware and high power consumption, but consumers cannot.</li>
+                            <li>Pattern Planning is an algorithm to reduce planning expense.</li>
                             <br>
-                            <li>We introduce <b>Pattern Planning, a motion planning algorithm designed to reduce the dollar cost of planning performance</b> through guided optimization and early exit.</li>
+                            <li>Quantitative comparison of planner performance is difficult.</li>
                             <br>
-                            <li>
-                                Finally, we introduce <b>SwerveSim, a flexible benchmarking infrastructure</b> designed to enable quantitative comparisons between motion planners. 
-                            </li>
-                        </ul>
+                            <li>SwerveSim allows users to compare algorithms with their own cost function.</li>
+                        </ol>
                     </section>
                     <section>
                         <h2>Citations</h2>
-                        <ul>
+                        <ol style="font-size: 0.6em;">
                             <li>A. Kelly, <i>Mobile robotics: mathematics, models, and methods.</i> New York, NY: Cambrige Univ. Press, 2013.</li>
-                            <li>TODO: I will fix this. I am waiting to cite everything.</li>
-                        </ul>
-                    </section>
-                    <section>
-                        <h2>Figures</h1>
-                        <ul>
-                            <li>A. Kelly, <i>Mobile robotics: mathematics, models, and methods.</i> New York, NY: Cambrige Univ. Press, 2013.</li>
-                            <li><i>IKV High Efficiency 6-axis Robot Arm. IKV Robotics.</i></li>
-                            <li>TODO: I will fix this. I am waiting to cite everything.</li>
-                        </ul>
+
+                            <li>M. McNaughton, C. Urmson, J. M. Dolan, and J. W. Lee, “Motion planning for autonomous driving with a conformal spatiotemporal lattice,”<i> in 2011 IEEE International Conference on Robotics and Automation</i>, May 2011, pp. 4889–4895.</li>
+
+                            <li>B. Paden, M. p, S. Z. Yong, D. Yershov, and E. Frazzoli, “A survey of
+                            motion planning and control techniques for self-driving urban vehicles,”
+                            <i>IEEE Transactions on Intelligent Vehicles</i>, vol. 1, no. 1, pp. 33–55, March
+                            2016.</li>
+
+                            <li>T. Gu, J. M. Dolan, and J. W. Lee, “Runtime-bounded tunable motion
+                            planning for autonomous driving,” in 2016 IEEE Intelligent Vehicles
+                            Symposium (IV), June 2016, pp. 1301–1306.</li>
+                        </ol>
                     </section>
                 </section>
 
